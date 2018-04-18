@@ -5,9 +5,11 @@
 <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame">PyGame</a><br>
 <a href="https://www.youtube.com/watch?v=_GikMdhAhv0&t=58s">How To Install</a><br>
 
-<img src>="">
-<img src>="">
-<img src>="">
+<img src>="https://github.com/manazco8580/TimeFracture/blob/master/gamescreenshot.png">
+<img src>="https://github.com/manazco8580/TimeFracture/blob/master/gamescreenshot1.png">
+<img src>="https://github.com/manazco8580/TimeFracture/blob/master/gamescreenshot2.png">
+<img src>="https://github.com/manazco8580/TimeFracture/blob/master/gamescreenshot3.png">
+<img src>="https://github.com/manazco8580/TimeFracture/blob/master/gamescreenshot4.png">
 
 <hr>
 
