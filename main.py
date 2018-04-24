@@ -61,6 +61,9 @@ returnmenu=Image("Return-To-Menu.png",game)
 aim=Image("aim2.png",game)
 forcefield=Animation("forcefield.png",20,game,960/5,768/4,8)
 timeblast=Animation("timeblast.png",10,game,640/10,64)
+appear=Animation("magic_002.png",15,game,960/5,576/3,4,use_alpha=False)
+boss=Image("boss.png",game)
+bossweapon=Animation("timeblast.png",10,game,640/10,64)
 
 game.setBackground(citybackground)
 citybackground.resizeTo(1480,820)
@@ -102,9 +105,7 @@ page3.resizeBy(-45)
 page3.moveTo(25,765)
 page3.visible=False
 wjwalk.resizeBy(40)
-wjwalk.y+=245
 wjjump.resizeBy(40)
-wjjump.y+=245
 wjjump.visible=False
 begin.resizeBy(-25)
 begin.y+=340
@@ -172,6 +173,12 @@ bullet3.visible=False
 aim.resizeBy(-79)
 timeblast.visible=False
 timeblast.resizeBy(-35)
+bossweapon.visible=False
+bossweapon.resizeBy(-35)
+appear.resizeBy(-30)
+boss.resizeBy(-30)
+boss.x+=300
+boss.y+=230
 
 #Health Packs
 healthpacks=[]
@@ -531,12 +538,12 @@ while not game.over:
         powerpacks[index].move()
 
         if powerpacks[index].collidedWith(wjwalk,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks[index].visible=False
 
         if powerpacks[index].collidedWith(wjjump,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks[index].visible=False
 
@@ -547,12 +554,12 @@ while not game.over:
         powerpacks1[index].move()
 
         if powerpacks1[index].collidedWith(wjwalk,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks1[index].visible=False
 
         if powerpacks1[index].collidedWith(wjjump,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks1[index].visible=False
 
@@ -563,12 +570,12 @@ while not game.over:
         powerpacks2[index].move()
 
         if powerpacks2[index].collidedWith(wjwalk,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks2[index].visible=False
 
         if powerpacks2[index].collidedWith(wjjump,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks2[index].visible=False
 
@@ -911,7 +918,7 @@ while not game.over:
     if keys.Pressed[K_SPACE]:
         bullet.moveTo(wjwalk.x+15,wjwalk.y-30)
         angleToCrosshair=bullet.angleTo(aim)
-        bullet.setSpeed(6.7,angleToCrosshair)
+        bullet.setSpeed(8.4,angleToCrosshair)
         bullet.visible=True
         gun.play()
 
@@ -955,7 +962,7 @@ while not game.over:
         timeblast.setSpeed(7.5,angleToCrosshair)
         timeblast.visible=True
         timeblastsound.play()
-        powerlevel-=20
+        powerlevel-=10
 
     if timeblast.collidedWith(enemy):
         bullet1.moveTo(enemy.x,enemy.y)
@@ -985,7 +992,7 @@ while not game.over:
         enemy2.setSpeed(1,90)
         powerlevel-=1
 
-    if not keys.Pressed[K_LSHIFT] and powerlevel>0:
+    if not keys.Pressed[K_LSHIFT] or powerlevel<0:
         bullet1.setSpeed(5.3,90)
         bullet2.setSpeed(5.3,90)
         bullet3.setSpeed(5.3,90)
@@ -995,7 +1002,12 @@ while not game.over:
         enemy1.setSpeed(y,90)
         enemy2.setSpeed(2,90)
 
-  
+    if powerlevel<0:
+        if keys.Pressed[K_LALT]:
+            timeblast.visible=False
+
+        if keys.Pressed[K_LCTRL]:
+            forcefield.visible=False
              
     if keys.Pressed[K_ESCAPE]:
         unpause.draw()
@@ -1123,6 +1135,9 @@ while not game.over:
     enemy.visible=True
     enemy1.visible=True
     enemy2.visible=True
+    enemyangleTo=bullet1.angleTo(wjwalk)
+    enemy1angleTo=bullet2.angleTo(wjwalk)
+    enemy2angleTo=bullet3.angleTo(wjwalk)
 
     if forcefield.visible:
         forcefield.move()
@@ -1181,12 +1196,12 @@ while not game.over:
         powerpacks3[index].move()
 
         if powerpacks3[index].collidedWith(wjwalk,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks3[index].visible=False
 
         if powerpacks3[index].collidedWith(wjjump,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks3[index].visible=False
 
@@ -1197,12 +1212,12 @@ while not game.over:
         powerpacks4[index].move()
 
         if powerpacks4[index].collidedWith(wjwalk,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks4[index].visible=False
 
         if powerpacks4[index].collidedWith(wjjump,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks4[index].visible=False
 
@@ -1213,12 +1228,12 @@ while not game.over:
         powerpacks5[index].move()
 
         if powerpacks5[index].collidedWith(wjwalk,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks5[index].visible=False
 
         if powerpacks5[index].collidedWith(wjjump,"rectangle"):
-            powerlevel+=10
+            powerlevel+=30
             pickup.play()
             powerpacks5[index].visible=False
 
@@ -1258,7 +1273,7 @@ while not game.over:
     if enemyfire>270:
         enemyfire-=271
         gun.play()
-        bullet1.setSpeed(5.3,90)
+        bullet1.setSpeed(5.3,enemyangleTo)
         bullet1.visible=True
 
     if bullet1.collidedWith(wjwalk) or bullet1.collidedWith(wjjump):
@@ -1277,7 +1292,7 @@ while not game.over:
     if enemyfire1>250:
         enemyfire1-=251
         gun.play()
-        bullet2.setSpeed(5.3,90)
+        bullet2.setSpeed(5.3,enemy1angleTo)
         bullet2.visible=True
 
     if bullet2.collidedWith(wjwalk) or bullet2.collidedWith(wjjump):
@@ -1296,7 +1311,7 @@ while not game.over:
     if enemyfire2>250:
         enemyfire2-=251
         gun.play()
-        bullet3.setSpeed(5.3,90)
+        bullet3.setSpeed(5.3,enemy2angleTo)
         bullet3.visible=True
 
     if bullet3.collidedWith(wjwalk) or bullet3.collidedWith(wjjump):
@@ -1358,7 +1373,7 @@ while not game.over:
     if keys.Pressed[K_SPACE]:
         bullet.moveTo(wjwalk.x+15,wjwalk.y-30)
         angleToCrosshair = bullet.angleTo(aim)
-        bullet.setSpeed(6.7,angleToCrosshair)
+        bullet.setSpeed(8.4,angleToCrosshair)
         bullet.visible=True
         gun.play()
 
@@ -1402,7 +1417,7 @@ while not game.over:
         timeblast.setSpeed(7.5,angleToCrosshair)
         timeblast.visible=True
         timeblastsound.play()
-        powerlevel-=20
+        powerlevel-=10
 
     if timeblast.collidedWith(enemy):
         bullet1.moveTo(enemy.x,enemy.y)
@@ -1432,7 +1447,7 @@ while not game.over:
         enemy2.setSpeed(1,90)
         powerlevel-=1
 
-    if not keys.Pressed[K_LSHIFT]:
+    if not keys.Pressed[K_LSHIFT] or power<0:
         bullet1.setSpeed(5.3,90)
         bullet2.setSpeed(5.3,90)
         bullet3.setSpeed(5.3,90)
@@ -1443,16 +1458,6 @@ while not game.over:
         enemy2.setSpeed(2,90)
 
     if powerlevel<0:
-        if keys.Pressed[K_LSHIFT]:
-            bullet1.setSpeed(5.3,90)
-            bullet2.setSpeed(5.3,90)
-            bullet3.setSpeed(5.3,90)
-            x=randint(1,3)
-            enemy.setSpeed(x,90)
-            y=randint(2,4)
-            enemy1.setSpeed(y,90)
-            enemy2.setSpeed(2,90)
-
         if keys.Pressed[K_LALT]:
             timeblast.visible=False
 
@@ -1538,6 +1543,559 @@ while not game.over:
     if begin.collidedWith(mouse) and mouse.LeftClick:
         stoploadingMusic()
         selection.play()
+        game.over=True
+
+    game.update(151)
+game.over=False
+
+#Level 4
+bossMusic()
+playbossMusic()
+
+game.setBackground(labbackground)
+labbackground.resizeTo(1480,820)
+
+jumpboost=100
+enemyfire=0
+enemyfire1=0
+enemyfire2=0
+forcefieldtime=1500
+bosshealth=1000
+bosshide=1000
+bosshide1=1000
+bosshide2=1450
+bossfire=250
+
+enemy.moveTo(1690,715)
+enemy1.moveTo(1750,715)
+enemy2.moveTo(1880,715)
+
+game.viewMouse(False)
+
+while not game.over:
+    game.processInput()
+
+    labbackground.move()
+    game.scrollBackground("left",3.5)
+    pause.draw()
+    wjwalk.move()
+    wjjump.move()
+    wjjump.moveTo(wjwalk.x,wjwalk.y)
+    mute.draw()
+    unmute.draw()
+    level4.draw()
+    bullet.move()
+    aim.draw()
+    aim.moveTo(mouse.x-53,mouse.y)
+    timeblast.move()
+    boss.move()
+    appear.move()
+    bossweapon.move()
+    enemy.visible=False
+    enemy1.visible=False
+    enemy2.visible=False
+    appear.visible=False
+
+    if forcefield.visible:
+        forcefield.move()
+        forcefield.moveTo(wjwalk.x,wjwalk.y)
+        forcefieldtime-=1
+
+    if wjwalk.collidedWith(boss,"rectangle"):
+        wjwalk.health-=1000
+
+    if bossfire>249 and not bossfire<1:
+        bossweapon.moveTo(boss.x,boss.y)
+    
+    if bossfire<251:
+        bossfire-=1
+
+    if bossfire<1:
+        bossfire+=250
+        bossweapon.visible=True
+        bossangleTo=bossweapon.angleTo(wjwalk)
+        bossweapon.setSpeed(7.3,bossangleTo)
+
+    if wjwalk.collidedWith(bossweapon,"circle"):
+        wjwalk.health-=20
+        bossweapon.visible=False
+
+    if bosshealth<750:
+        appear.visible=True
+        boss.visible=False
+        bossweapon.visible=False
+        bosshide-=1
+
+    if bosshide<1:
+        appear.visible=False
+        boss.visible=True
+        bossweapon.visible=True
+
+    if bosshealth<750 and bosshide>1:
+        enemy.visible=True
+        enemy1.visible=True
+        enemy2.visible=True
+        
+        enemy.move()
+        x=randint(1,3)
+        enemy.setSpeed(x,90)
+
+        enemy1.move()
+        y=randint(2,4)
+        enemy1.setSpeed(y,90)
+
+        enemy2.move()
+        enemy2.setSpeed(2,90)
+
+        if enemy.isOffScreen("left"):
+            x=randint(1500,1600)
+            enemy.moveTo(x,715)
+
+        if enemy1.isOffScreen("left"):
+            x=randint(1550,1650)
+            enemy1.moveTo(x,715)
+
+        if enemy2.isOffScreen("left"):
+            x=randint(1620,1700)
+            enemy2.moveTo(x,715)
+
+        bullet1.move()
+        bullet2.move()
+        bullet3.move()
+
+        if enemyfire<271:
+            enemyfire+=1
+
+        if enemyfire>270:
+            enemyfire-=271
+            gun.play()
+            bullet1.setSpeed(5.3,90)
+            bullet1.visible=True
+
+        if bullet1.collidedWith(wjwalk) or bullet1.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet1.moveTo(enemy.x,enemy.y)
+            bullet1.visible=False
+
+        if bullet1.isOffScreen("left"):
+            bullet1.moveTo(enemy.x,enemy.y)
+            bullet1.visible=False
+        
+        if enemyfire1<251:
+            enemyfire1+=1
+
+        if enemyfire1>250:
+            enemyfire1-=251
+            gun.play()
+            bullet2.setSpeed(5.3,90)
+            bullet2.visible=True
+
+        if bullet2.collidedWith(wjwalk) or bullet2.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet2.moveTo(enemy1.x,enemy1.y)
+            bullet2.visible=False
+
+        if bullet2.isOffScreen("left"):
+            bullet2.moveTo(enemy1.x,enemy1.y)
+            bullet2.visible=False
+
+        if enemyfire2<251:
+            enemyfire2+=1
+
+        if enemyfire2>250:
+            enemyfire2-=251
+            gun.play()
+            bullet3.setSpeed(5.3,90)
+            bullet3.visible=True
+
+        if bullet3.collidedWith(wjwalk) or bullet3.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet3.moveTo(enemy2.x,enemy2.y)
+            bullet3.visible=False
+
+        if bullet3.isOffScreen("left"):
+            bullet3.moveTo(enemy2.x,enemy2.y)
+            bullet3.visible=False
+
+    if bosshealth<500:
+        appear.visible=True
+        boss.visible=False
+        bosshide1-=1
+
+    if bosshide1<1:
+        appear.visible=False
+        boss.visible=True
+
+    if bosshealth<500 and bosshide1>1:
+        enemy.visible=True
+        enemy1.visible=True
+        enemy2.visible=True
+        
+        enemy.move()
+        x=randint(1,3)
+        enemy.setSpeed(x,90)
+
+        enemy1.move()
+        y=randint(2,4)
+        enemy1.setSpeed(y,90)
+
+        enemy2.move()
+        enemy2.setSpeed(2,90)
+
+        if enemy.isOffScreen("left"):
+            x=randint(1500,1600)
+            enemy.moveTo(x,715)
+
+        if enemy1.isOffScreen("left"):
+            x=randint(1550,1650)
+            enemy1.moveTo(x,715)
+
+        if enemy2.isOffScreen("left"):
+            x=randint(1620,1700)
+            enemy2.moveTo(x,715)
+
+        bullet1.move()
+        bullet2.move()
+        bullet3.move()
+
+        if enemyfire<271:
+            enemyfire+=1
+
+        if enemyfire>270:
+            enemyfire-=271
+            gun.play()
+            bullet1.setSpeed(5.3,90)
+            bullet1.visible=True
+
+        if bullet1.collidedWith(wjwalk) or bullet1.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet1.moveTo(enemy.x,enemy.y)
+            bullet1.visible=False
+
+        if bullet1.isOffScreen("left"):
+            bullet1.moveTo(enemy.x,enemy.y)
+            bullet1.visible=False
+        
+        if enemyfire1<251:
+            enemyfire1+=1
+
+        if enemyfire1>250:
+            enemyfire1-=251
+            gun.play()
+            bullet2.setSpeed(5.3,90)
+            bullet2.visible=True
+
+        if bullet2.collidedWith(wjwalk) or bullet2.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet2.moveTo(enemy1.x,enemy1.y)
+            bullet2.visible=False
+
+        if bullet2.isOffScreen("left"):
+            bullet2.moveTo(enemy1.x,enemy1.y)
+            bullet2.visible=False
+
+        if enemyfire2<251:
+            enemyfire2+=1
+
+        if enemyfire2>250:
+            enemyfire2-=251
+            gun.play()
+            bullet3.setSpeed(5.3,90)
+            bullet3.visible=True
+
+        if bullet3.collidedWith(wjwalk) or bullet3.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet3.moveTo(enemy2.x,enemy2.y)
+            bullet3.visible=False
+
+        if bullet3.isOffScreen("left"):
+            bullet3.moveTo(enemy2.x,enemy2.y)
+            bullet3.visible=False
+
+    if bosshealth<350:
+        enemy.visible=True
+        enemy1.visible=True
+        enemy2.visible=True
+        
+        enemy.move()
+        x=randint(1,3)
+        enemy.setSpeed(x,90)
+
+        enemy1.move()
+        y=randint(2,4)
+        enemy1.setSpeed(y,90)
+
+        enemy2.move()
+        enemy2.setSpeed(2,90)
+
+        if enemy.isOffScreen("left"):
+            x=randint(1500,1600)
+            enemy.moveTo(x,715)
+
+        if enemy1.isOffScreen("left"):
+            x=randint(1550,1650)
+            enemy1.moveTo(x,715)
+
+        if enemy2.isOffScreen("left"):
+            x=randint(1620,1700)
+            enemy2.moveTo(x,715)
+
+        bullet1.move()
+        bullet2.move()
+        bullet3.move()
+
+        if enemyfire<271:
+            enemyfire+=1
+
+        if enemyfire>270:
+            enemyfire-=271
+            gun.play()
+            bullet1.setSpeed(5.3,90)
+            bullet1.visible=True
+
+        if bullet1.collidedWith(wjwalk) or bullet1.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet1.moveTo(enemy.x,enemy.y)
+            bullet1.visible=False
+
+        if bullet1.isOffScreen("left"):
+            bullet1.moveTo(enemy.x,enemy.y)
+            bullet1.visible=False
+        
+        if enemyfire1<251:
+            enemyfire1+=1
+
+        if enemyfire1>250:
+            enemyfire1-=251
+            gun.play()
+            bullet2.setSpeed(5.3,90)
+            bullet2.visible=True
+
+        if bullet2.collidedWith(wjwalk) or bullet2.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet2.moveTo(enemy1.x,enemy1.y)
+            bullet2.visible=False
+
+        if bullet2.isOffScreen("left"):
+            bullet2.moveTo(enemy1.x,enemy1.y)
+            bullet2.visible=False
+
+        if enemyfire2<251:
+            enemyfire2+=1
+
+        if enemyfire2>250:
+            enemyfire2-=251
+            gun.play()
+            bullet3.setSpeed(5.3,90)
+            bullet3.visible=True
+
+        if bullet3.collidedWith(wjwalk) or bullet3.collidedWith(wjjump):
+            wjwalk.health-=5
+            damage.play()
+            bullet3.moveTo(enemy2.x,enemy2.y)
+            bullet3.visible=False
+
+        if bullet3.isOffScreen("left"):
+            bullet3.moveTo(enemy2.x,enemy2.y)
+            bullet3.visible=False
+    
+    if bosshealth<250:
+        appear.visible=True
+        boss.visible=False
+        bosshide1-=1
+
+    if bosshide1<1:
+        appear.visible=False
+        boss.visible=True
+
+    if bosshealth<1:
+        game.over=True
+
+    #Game Controls
+    if wjwalk.y<700 or wjjump.y<700:
+        wjwalk.y+=4
+        wjjump.y+=4
+    
+    if keys.Pressed[K_d]:
+        wjwalk.x+=3.77
+    elif keys.Pressed[K_d]:
+        wjwalk.x-=3.77
+
+    if not keys.Pressed[K_d]:
+        wjwalk.x-=1
+
+    if keys.Pressed[K_a]:
+        wjwalk.x-=3.77
+    
+    if keys.Pressed[K_w]:
+        wjwalk.visible=False
+        wjjump.visible=True
+        wjwalk.y-=5.7
+        wjjump.y-=5.7
+        jumpboost-=1
+        
+    if jumpboost<0:
+        wjwalk.y+=4
+        wjjump.y+=4
+        jumpboost+=1
+
+    if jumpboost<100 and not keys.Pressed[K_w]:
+        jumpboost+=1
+        
+    if jumpboost>100:
+        jumpboost-=1
+        jumpboost+=1
+        
+    if not keys.Pressed[K_w]:
+        wjwalk.visible=True
+        wjjump.visible=False
+
+    if keys.Pressed[K_s]:
+        wjwalk.y+=5.7
+        wjjump.y+=5.7
+
+    if wjwalk.y>725:
+        wjwalk.y-=5.7
+
+    if keys.Pressed[K_SPACE]:
+        bullet.moveTo(wjwalk.x+15,wjwalk.y-30)
+        angleToCrosshair = bullet.angleTo(aim)
+        bullet.setSpeed(8.4,angleToCrosshair)
+        bullet.visible=True
+        gun.play()
+
+    if bullet.collidedWith(boss,"rectangle"):
+        bullet.visible=False
+        bosshealth-=10
+
+    if bullet.collidedWith(enemy,"rectangle"):
+        bullet.visible=False
+        bullet1.moveTo(enemy.x,enemy.y)
+        x=randint(1500,1600)
+        enemy.moveTo(x,715)
+
+    if bullet.collidedWith(enemy1,"rectangle"):
+        bullet.visible=False
+        bullet2.moveTo(enemy1.x,enemy1.y)
+        x=randint(1550,1650)
+        enemy1.moveTo(x,715)
+        
+    if bullet.collidedWith(enemy2,"rectangle"):
+        bullet.visible=False
+        bullet3.moveTo(enemy2.x,enemy2.y)
+        x=randint(1620,1700)
+        enemy2.moveTo(x,715)
+
+    if bullet.x>1450:
+        bullet.visible=False
+        bullet.moveTo(wjwalk.x+15,wjwalk.y-30)
+
+    if keys.Pressed[K_LCTRL]:
+        forcefield.visible=not forcefield.visible
+
+    if forcefieldtime<0:
+        forcefield.visible=False
+        powerlevel-=10
+
+    if bullet1.collidedWith(forcefield,"circle") or bullet2.collidedWith(forcefield,"circle") or bullet3.collidedWith(forcefield,"circle") or bossweapon.collidedWith(forcefield,"circle"):
+        bullet1.visible=False
+        bullet2.visible=False
+        bullet3.visible=False
+        bossweapon.visible=False
+
+    if keys.Pressed[K_LALT]:
+        timeblast.moveTo(wjwalk.x+15,wjwalk.y-30)
+        angleToCrosshair=timeblast.angleTo(aim)
+        timeblast.setSpeed(7.5,angleToCrosshair)
+        timeblast.visible=True
+        timeblastsound.play()
+        powerlevel-=10
+
+    if timeblast.collidedWith(boss):
+        bosshealth-=50
+        timeblast.visible=False
+
+    if timeblast.collidedWith(enemy):
+        bullet1.moveTo(enemy.x,enemy.y)
+        x=randint(1500,1600)
+        enemy.moveTo(x,715)
+
+    if timeblast.collidedWith(enemy1):
+        bullet2.moveTo(enemy1.x,enemy1.y)
+        x=randint(1550,1650)
+        enemy1.moveTo(x,715)
+        
+    if timeblast.collidedWith(enemy2):
+        bullet3.moveTo(enemy2.x,enemy2.y)
+        x=randint(1620,1700)
+        enemy2.moveTo(x,715)
+
+    if timeblast.x>1500:
+        timeblast.visible=False
+        timeblast.moveTo(wjwalk.x+15,wjwalk.y-30)
+
+    if keys.Pressed[K_LSHIFT]:
+        bullet1.setSpeed(1.8,90)
+        bullet2.setSpeed(1.8,90)
+        bullet3.setSpeed(1.8,90)
+        enemy.setSpeed(1,90)
+        enemy1.setSpeed(1,90)
+        enemy2.setSpeed(1,90)
+        powerlevel-=1
+
+    if not keys.Pressed[K_LSHIFT] or powerlevel<0:
+        bullet1.setSpeed(5.3,90)
+        bullet2.setSpeed(5.3,90)
+        bullet3.setSpeed(5.3,90)
+        x=randint(1,3)
+        enemy.setSpeed(x,90)
+        y=randint(2,4)
+        enemy1.setSpeed(y,90)
+        enemy2.setSpeed(2,90)
+
+    if powerlevel<0:
+        if keys.Pressed[K_LALT]:
+            timeblast.visible=False
+
+        if keys.Pressed[K_LCTRL]:
+            forcefield.visible=False
+    
+    if keys.Pressed[K_ESCAPE]:
+        unpause.draw()
+        game.update(101)
+        game.wait(K_TAB)
+
+    if keys.Pressed[K_n]:
+        stopgameMusic()
+
+    if keys.Pressed[K_m]:
+        playgameMusic()
+
+    game.drawText("Your Health:"+str(wjwalk.health),5,65,font)
+    game.drawText("Your Power Level:"+str(powerlevel),5,85,font)
+    game.drawText("Your Jump Boost Fuel:"+str(jumpboost),5,105,font)
+    game.drawText("Boss Health:"+str(bosshealth),1325,95,font1)
+
+    #Game Over
+    if wjwalk.health<1:
+        stopgameMusic()
+        death.play()
+        game.clearBackground()
+        gameover.draw()
+        end.draw()
+        game.update(151)
+        game.wait(K_RETURN)
+        game.quit()
+
+    if moveon.collidedWith(mouse) and mouse.LeftClick:
         game.over=True
 
     game.update(151)
